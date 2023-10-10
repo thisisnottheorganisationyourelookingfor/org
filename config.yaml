@@ -1,0 +1,57 @@
+orgs:
+  thisisnottheorganisationyourelookingfor:
+    company: thisisnottheorganisationyourelookingfor
+    name: thisisnottheorganisationyourelookingfor
+    email: ""
+    location: Wellington, New Zealand
+    description: |
+      you are not looking for it
+    has_organization_projects: true
+    has_repository_projects: true
+    default_repository_permission: read
+    members_can_create_repositories: false
+    admins:
+      - BobyMCbobs
+      - thisisnottheadminyourelookingfor
+    members:
+      - caleb-ii-no-authorization
+    billing_email: calebwoodbine.public+thisisnottheorganisationyourelookingfor@gmail.com
+    teams:
+      team-go:
+        description: we're team go! we're on the go!
+        privacy: closed
+        maintainers:
+          - BobyMCbobs
+        members:
+          - caleb-ii-no-authorization
+        repos:
+          somerepo: admin
+    repos:
+      org:
+        default_branch: main
+        has_projects: true
+      something:
+        default_branch: main
+        has_projects: true
+      thecoolthing:
+        default_branch: main
+        has_projects: true
+      somerepo:
+        default_branch: main
+        has_projects: true
+branch-protection:
+  orgs:
+    thisisnottheorganisationyourelookingfor:
+      # Disable protection unless overridden (overrides parent setting of true)
+      protect: false
+      repos:
+        thecoolthing:
+          protect: false
+          branches:
+            main:
+              # Protect the secure branch (overrides inhereted parent setting of false)
+              protect: true
+              # Require the foo status context
+              required_status_checks:
+                contexts:
+                  - hi

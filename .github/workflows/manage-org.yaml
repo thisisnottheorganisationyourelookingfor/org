@@ -1,0 +1,56 @@
+name: manage-org
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch: {}
+jobs:
+  checkconfig:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9 # v4.0.0
+        with:
+          go-version: 'stable'
+          check-latest: true
+      - name: run checkconfig
+        run: |
+          echo "TODO"
+  peribolos:
+    needs: checkconfig
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9 # v4.0.0
+        with:
+          go-version: 'stable'
+          check-latest: true
+      - name: run peribolos
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          go run k8s.io/test-infra/prow/cmd/peribolos@latest \
+            --github-token-path <(echo "$GH_TOKEN") --config-path ./config.yaml \
+            -fix-org -fix-org-members -fix-repos -fix-team-members -fix-team-repos -fix-teams -min-admins=2 --require-self=true \
+            --maximum-removal-delta=1 \
+            --confirm
+  branchprotector:
+    runs-on: ubuntu-latest
+    needs: checkconfig
+    steps:
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9 # v4.0.0
+        with:
+          go-version: 'stable'
+          check-latest: true
+      - name: run branchprotector
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          go run k8s.io/test-infra/prow/cmd/branchprotector@latest \
+            --github-token-path <(echo "$GH_TOKEN") --config-path ./config.yaml \
+            --confirm

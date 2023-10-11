@@ -70,5 +70,5 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           go run k8s.io/test-infra/label_sync@latest \
-            --github-token-path <(echo "$GH_TOKEN") --config-path ./labels.yaml \
+            --github-token-path <(echo "$GH_TOKEN") --config ./labels.yaml \
             --confirm

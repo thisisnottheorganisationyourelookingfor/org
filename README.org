@@ -1,0 +1,29 @@
+#+title: org
+
+#+begin_quote
+Org management
+#+end_quote
+
+* Creating a token
+
+generate token at https://github.com/settings/tokens?type=beta.
+selecting:
+- /admin:write/; and
+- /repo:write/
+
+with permissions to all repositories owned by the organisation
+
+set the token:
+
+#+begin_src shell
+gh secrets set GH_TOKEN
+#+end_src
+
+* Intially dumping the org config
+
+dump all of the org to a config file in a separate file as a starter
+
+#+begin_src shell
+go run k8s.io/test-infra/prow/cmd/peribolos@latest --github-token-path ./token --dump-full --dump thisisnottheorganisationyourelookingfor \
+  | tee config-full-starter.yaml
+#+end_src

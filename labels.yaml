@@ -1,0 +1,9 @@
+---
+default:
+  labels:
+    - color: ff0000
+      description: Easy to do issues
+      name: good-first-issue
+      target: both
+      prowPlugin: label
+      addedBy: anyone

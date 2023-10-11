@@ -39,8 +39,9 @@ jobs:
             --maximum-removal-delta=1 \
             --confirm
   branchprotector:
-    runs-on: ubuntu-latest
     needs: checkconfig
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
       - uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9 # v4.0.0
@@ -53,4 +54,21 @@ jobs:
         run: |
           go run k8s.io/test-infra/prow/cmd/branchprotector@latest \
             --github-token-path <(echo "$GH_TOKEN") --config-path ./config.yaml \
+            --confirm
+  labelsync:
+    needs: checkconfig
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3.5.2
+      - uses: actions/setup-go@4d34df0c2316fe8122ab82dc22947d607c0c91f9 # v4.0.0
+        with:
+          go-version: 'stable'
+          check-latest: true
+      - name: run labelsync
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          go run k8s.io/test-infra/label_sync@latest \
+            --github-token-path <(echo "$GH_TOKEN") --config-path ./labels.yaml \
             --confirm
